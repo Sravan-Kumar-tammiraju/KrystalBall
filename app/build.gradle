@@ -1,0 +1,31 @@
+plugins {
+    id 'java'
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+
+    // Selenium
+    testImplementation 'org.seleniumhq.selenium:selenium-java:4.21.0'
+
+    // TestNG
+    testImplementation 'org.testng:testng:7.10.2'
+
+    // WebDriverManager
+    testImplementation 'io.github.bonigarcia:webdrivermanager:5.8.0'
+}
+
+test {
+
+    useTestNG()
+
+    testLogging {
+        events "PASSED", "FAILED", "SKIPPED"
+        showStandardStreams = true
+    }
+
+    outputs.upToDateWhen { false }
+}
