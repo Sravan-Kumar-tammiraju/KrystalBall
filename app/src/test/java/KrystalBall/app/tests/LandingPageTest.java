@@ -1,19 +1,20 @@
 package KrystalBall.app.tests;
 
-import KrystalBall.app.BaseTest;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
+import KrystalBall.app.Base.BaseTest;
+
 public class LandingPageTest extends BaseTest {
 
-    @Test
+    @Test(priority = 1, groups = {"smoke", "regression"})
     public void verifyLandingPage() {
 
-        String currentUrl = driver.getCurrentUrl();
-
         Assert.assertTrue(
-                currentUrl.contains("smartpad-customer-feedback"));
+                landingPage.isLandingPageOpened(),
+                "Landing page is not opened"
+        );
 
-        System.out.println("Landing page loaded successfully");
+        System.out.println("PASS: Landing page loaded successfully");
     }
 }

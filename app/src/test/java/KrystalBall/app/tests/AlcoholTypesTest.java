@@ -1,30 +1,26 @@
 package KrystalBall.app.tests;
 
-import KrystalBall.app.BaseTest;
-import org.openqa.selenium.By;
-import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
+import KrystalBall.app.Base.BaseTest;
+
 public class AlcoholTypesTest extends BaseTest {
 
-    @Test
+    @Test(priority = 2, groups = {"smoke", "regression", "navigation"})
     public void verifyAlcoholTypesNavigation() {
 
-        wait.until(ExpectedConditions.elementToBeClickable(
-                By.xpath("//*[contains(text(),'Get started')]")
-        )).click();
+        landingPage.clickGetStarted();
 
-        handleAgeVerificationPopup();
+        alcoholTypesPage.handleAgeVerificationPopupIfPresent();
 
-        wait.until(ExpectedConditions.elementToBeClickable(
-                By.xpath("(//div[contains(@class,'cursor-pointer')])[1]")
-        )).click();
+        alcoholTypesPage.selectAlcoholCardByIndex(0);
 
-        String currentUrl = driver.getCurrentUrl();
+        Assert.assertTrue(
+                alcoholTypesPage.isProductsPageOpened(),
+                "Products page is not opened after selecting alcohol type"
+        );
 
-        Assert.assertTrue(currentUrl.contains("products"));
-
-        System.out.println("Alcohol types page opened successfully");
+        System.out.println("PASS: Alcohol type navigation successful");
     }
 }

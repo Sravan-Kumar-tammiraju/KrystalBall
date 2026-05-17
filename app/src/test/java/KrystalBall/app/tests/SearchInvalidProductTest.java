@@ -1,52 +1,32 @@
 package KrystalBall.app.tests;
 
-import KrystalBall.app.BaseTest;
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.ui.ExpectedConditions;
+import KrystalBall.app.Base.BaseTest;
+import KrystalBall.app.utils.ConfigReader;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import java.util.List;
-
 public class SearchInvalidProductTest extends BaseTest {
 
-    @Test
+    @Test(priority = 6, groups = {"regression", "search"})
     public void verifySearchWithInvalidProduct() {
 
-        // Click Get Started
-        wait.until(ExpectedConditions.elementToBeClickable(
-                By.xpath("//*[contains(text(),'Get started')]")
-        )).click();
+        String invalidProduct = ConfigReader.getProperty("invalidProduct");
 
-        // Select alcohol tile
-        wait.until(ExpectedConditions.elementToBeClickable(
-                By.xpath("(//div[contains(@class,'cursor-pointer')])[2]")
-        )).click();
+        landingPage.clickGetStarted();
 
-        // Handle age popup
-        handleAgeVerificationPopup();
+        alcoholTypesPage.selectAlcoholCardByIndex(0);
 
-        // Continue without account
-        wait.until(ExpectedConditions.elementToBeClickable(
-                By.xpath("//*[contains(text(),'Continue without an account')]")
-        )).click();
+        alcoholTypesPage.handleAgeVerificationPopupIfPresent();
 
-        // Search invalid product
-        WebElement searchField = wait.until(
-                ExpectedConditions.visibilityOfElementLocated(
-                        By.xpath("//input[contains(@placeholder,'Search')]")
-                )
+        loginPage.clickContinueWithoutAccountIfPresent();
+
+        productsPage.searchProduct(invalidProduct);
+
+        Assert.assertTrue(
+                productsPage.isInvalidProductNotDisplayed(invalidProduct),
+                "Invalid product text should not be displayed"
         );
 
-        searchField.sendKeys("dfgfdgt");
-
-        // Verify no matching products
-        List<WebElement> products =
-                driver.findElements(By.xpath("//*[contains(text(),'dfgfdgt')]"));
-
-        Assert.assertTrue(products.isEmpty());
-
-        System.out.println("PASS: No matching products displayed");
+        System.out.println("PASS: Invalid product search validation successful");
     }
 }

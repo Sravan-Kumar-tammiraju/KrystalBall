@@ -1,58 +1,30 @@
 package KrystalBall.app.tests;
 
-import KrystalBall.app.BaseTest;
-import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
+import KrystalBall.app.Base.BaseTest;
+
 public class ContinueWithoutAccountTest extends BaseTest {
 
-        @Test
-        public void verifyContinueWithoutAccount() {
+    @Test(priority = 4, groups = {"smoke", "regression", "guest"})
+    public void verifyContinueWithoutAccount() {
 
-                // Click Get Started
-                wait.until(ExpectedConditions.elementToBeClickable(
-                                By.xpath("//*[contains(text(),'Get started')]"))).click();
+        landingPage.clickGetStarted();
 
-                // Handle popup after page transition
-                handleAgeVerificationPopup();
+        alcoholTypesPage.handleAgeVerificationPopupIfPresent();
 
-                // Select third alcohol card
-                WebElement alcoholCard = wait.until(
-                                ExpectedConditions.presenceOfElementLocated(
-                                                By.xpath("(//div[contains(@class,'cursor-pointer')])[3]")));
+        alcoholTypesPage.selectAlcoholCardByIndex(2);
 
-                // Scroll into view
-                ((JavascriptExecutor) driver)
-                                .executeScript("arguments[0].scrollIntoView(true);",
-                                                alcoholCard);
+        alcoholTypesPage.handleAgeVerificationPopupIfPresent();
 
-                // Handle popup AGAIN before clicking
-                handleAgeVerificationPopup();
+        loginPage.clickContinueWithoutAccount();
 
-                // Click card
-                wait.until(ExpectedConditions.elementToBeClickable(
-                                alcoholCard)).click();
+        Assert.assertTrue(
+                productsPage.isSearchInputDisplayed(),
+                "Search input is not displayed after continuing without account"
+        );
 
-                // Handle popup AGAIN after clicking
-                handleAgeVerificationPopup();
-
-                // Continue without account
-                wait.until(ExpectedConditions.elementToBeClickable(
-                                By.xpath("//*[contains(text(),'Continue without an account')]"))).click();
-
-                // Verify products page loaded
-                wait.until(ExpectedConditions.urlContains("/products"));
-
-                WebElement searchBar = wait.until(
-                                ExpectedConditions.visibilityOfElementLocated(
-                                                By.xpath("//input[contains(@placeholder,'Search')]")));
-
-                Assert.assertTrue(searchBar.isDisplayed());
-
-                System.out.println("PASS: Continue without account successful");
-        }
+        System.out.println("PASS: Continue without account successful");
+    }
 }

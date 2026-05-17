@@ -1,35 +1,27 @@
 package KrystalBall.app.tests;
 
-import KrystalBall.app.BaseTest;
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
+import KrystalBall.app.Base.BaseTest;
+
 public class LoginPopupTest extends BaseTest {
 
-    @Test
+    @Test(priority = 3, groups = {"regression", "authentication", "ui"})
     public void verifyLoginPopupDisplayed() {
 
-        wait.until(ExpectedConditions.elementToBeClickable(
-                By.xpath("//*[contains(text(),'Get started')]")
-        )).click();
+        landingPage.clickGetStarted();
 
-        handleAgeVerificationPopup();
+        alcoholTypesPage.handleAgeVerificationPopupIfPresent();
 
-        // Select second alcohol card
-        wait.until(ExpectedConditions.elementToBeClickable(
-                By.xpath("(//div[contains(@class,'cursor-pointer')])[2]")
-        )).click();
+        alcoholTypesPage.selectAlcoholCardByIndex(1);
 
-        WebElement popup = wait.until(
-                ExpectedConditions.visibilityOfElementLocated(
-                        By.xpath("//*[contains(text(),'Get Started Now')]")
-                )
+        alcoholTypesPage.handleAgeVerificationPopupIfPresent();
+
+        Assert.assertTrue(
+                loginPage.isLoginPopupDisplayed(),
+                "Login popup is not displayed"
         );
-
-        Assert.assertTrue(popup.isDisplayed());
 
         System.out.println("PASS: Login popup displayed successfully");
     }
